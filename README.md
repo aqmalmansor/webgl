@@ -1,3 +1,3 @@
-# TODO
+# WebGL/Three.js Playground
 
-[ ] Boilerplate documentation
+A personal repository for experimenting with WebGL and Three.js graphics programming.
