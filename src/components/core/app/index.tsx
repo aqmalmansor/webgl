@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react";
 import { Theme } from "@radix-ui/themes";
-import { Toaster } from "react-hot-toast";
 
 import { AppRoutes } from "@app/components/core";
 import { APP_VERSION, ENV_STAGE } from "@app/lib/config";
@@ -16,7 +15,6 @@ export const App: FC = () => {
   return (
     <Theme>
       <AppRoutes />
-      <Toaster />
     </Theme>
   );
 };

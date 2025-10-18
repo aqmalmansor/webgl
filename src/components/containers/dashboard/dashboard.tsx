@@ -1,14 +1,9 @@
-import { Button, Flex } from "@radix-ui/themes";
-
-import { useAuth } from "@app/store";
+import { Flex } from "@radix-ui/themes";
 
 export const DashboardContainer = () => {
-  const { clearAuthToken } = useAuth();
-
   return (
     <Flex direction={"column"} gap={"4"}>
       <div>Dashboard</div>
-      <Button onClick={() => clearAuthToken()}>Logout</Button>
     </Flex>
   );
 };
