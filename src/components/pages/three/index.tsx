@@ -7,6 +7,8 @@ import {
   circularMotion,
   description,
   focusOnMeshWithMovingCamera,
+  mousePositionAndVectorBasedCamera,
+  mousePositionBasedCamera,
   rotateIncrementallyFaster,
 } from "./config";
 
@@ -42,6 +44,18 @@ export const ThreePage = () => {
     camera.position.z = 3;
     scene.add(camera);
 
+    const mousePosition = {
+      x: 0,
+      y: 0,
+    };
+
+    const handleMouseMove = (evt: MouseEvent) => {
+      mousePosition.x = (evt.clientX / sizes.width - 0.5) * 3;
+      mousePosition.y = -(evt.clientY / sizes.height - 0.5) * 3;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
     // Renderer
     const renderer = new THREE.WebGLRenderer({ canvas });
     renderer.setSize(sizes.width, sizes.height);
@@ -60,6 +74,12 @@ export const ThreePage = () => {
         case AnimationTypeEnum.MOVING_CAMERA:
           focusOnMeshWithMovingCamera(mesh, clock, camera);
           break;
+        case AnimationTypeEnum.MOUSE_POSITION:
+          mousePositionBasedCamera(mesh, camera, mousePosition);
+          break;
+        case AnimationTypeEnum.MOUSE_POSITION_VECTOR:
+          mousePositionAndVectorBasedCamera(mesh, camera, mousePosition);
+          break;
         default:
           break;
       }
@@ -75,6 +95,7 @@ export const ThreePage = () => {
 
     // Cleanup
     return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -84,10 +105,11 @@ export const ThreePage = () => {
   return (
     <div className="container mx-auto">
       <h1>Three.js Page</h1>
+      {/* <h5 className="mb-3">Mouse Position {JSON.stringify(mousePosition)}</h5> */}
       <canvas ref={canvasRef} className="webgl"></canvas>
       <div className="flex flex-row flex-wrap gap-3 mb-3 my-8">
         {Object.values(AnimationTypeEnum).map((item) => (
-          <Tooltip content={description[item].tooltip}>
+          <Tooltip key={item} content={description[item].tooltip}>
             <Button onClick={() => setAnimationType(item)} size="4">
               {description[item].label}
             </Button>
