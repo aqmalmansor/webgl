@@ -21,25 +21,20 @@ export const ThreePage = () => {
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Canvas
     const canvas = canvasRef.current;
 
-    // Scene
     const scene = new THREE.Scene();
 
-    // Object
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: "green" });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    // Sizes
     const sizes = {
       width: 800,
       height: 600,
     };
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
     camera.position.z = 3;
     scene.add(camera);
@@ -56,7 +51,6 @@ export const ThreePage = () => {
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Renderer
     const renderer = new THREE.WebGLRenderer({ canvas });
     renderer.setSize(sizes.width, sizes.height);
     renderer.render(scene, camera);
@@ -84,16 +78,13 @@ export const ThreePage = () => {
           break;
       }
 
-      // Render
       renderer.render(scene, camera);
 
-      // Call tick again on the next frame
       requestAnimationFrame(tick);
     };
 
     tick();
 
-    // Cleanup
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       renderer.dispose();
@@ -105,7 +96,6 @@ export const ThreePage = () => {
   return (
     <div className="container mx-auto">
       <h1>Three.js Page</h1>
-      {/* <h5 className="mb-3">Mouse Position {JSON.stringify(mousePosition)}</h5> */}
       <canvas ref={canvasRef} className="webgl"></canvas>
       <div className="flex flex-row flex-wrap gap-3 mb-3 my-8">
         {Object.values(AnimationTypeEnum).map((item) => (
