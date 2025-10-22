@@ -31,8 +31,8 @@ export const ThreePage = () => {
     scene.add(mesh);
 
     const sizes = {
-      width: 800,
-      height: 600,
+      width: window.innerWidth,
+      height: window.innerHeight,
     };
 
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
@@ -44,15 +44,36 @@ export const ThreePage = () => {
       y: 0,
     };
 
+    const handleScreenResize = () => {
+      sizes.width = window.innerWidth;
+      sizes.height = window.innerHeight;
+
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(sizes.width, sizes.height);
+      renderer.setPixelRatio(window.devicePixelRatio);
+    };
+
     const handleMouseMove = (evt: MouseEvent) => {
       mousePosition.x = (evt.clientX / sizes.width - 0.5) * 3;
       mousePosition.y = -(evt.clientY / sizes.height - 0.5) * 3;
     };
 
+    const handleFullScreen = () => {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen();
+        return;
+      }
+      document.exitFullscreen();
+    };
+
+    window.addEventListener("resize", handleScreenResize);
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("dblclick", handleFullScreen);
 
     const renderer = new THREE.WebGLRenderer({ canvas });
     renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.render(scene, camera);
 
     const clock = new THREE.Clock();
@@ -87,6 +108,8 @@ export const ThreePage = () => {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleScreenResize);
+      window.removeEventListener("dblclick", handleFullScreen);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -94,10 +117,9 @@ export const ThreePage = () => {
   }, [animationType]);
 
   return (
-    <div className="container mx-auto">
-      <h1>Three.js Page</h1>
+    <div className="relative">
       <canvas ref={canvasRef} className="webgl"></canvas>
-      <div className="flex flex-row flex-wrap gap-3 mb-3 my-8">
+      <div className="fixed left-8 right-8 bottom-5 flex flex-row flex-wrap gap-3 mb-3 my-8">
         {Object.values(AnimationTypeEnum).map((item) => (
           <Tooltip key={item} content={description[item].tooltip}>
             <Button onClick={() => setAnimationType(item)} size="4">
